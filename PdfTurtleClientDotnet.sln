@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfTurtleClientDotnet", "PdfTurtleClientDotnet\PdfTurtleClientDotnet.csproj", "{62A52A42-3FB7-47AB-8BE1-C22A09D1F7E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfTurtleClientDotnet.Tests", "PdfTurtleClientDotnet.Tests\PdfTurtleClientDotnet.Tests.csproj", "{D0FCE6D7-4776-4570-9C3A-2A733403709E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdfTurtleClientDotnet.WebApiExample", "PdfTurtleClientDotnet.WebApiExample\PdfTurtleClientDotnet.WebApiExample.csproj", "{9E8C2A4A-4AB9-4F28-B006-0A9BBD76E30F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62A52A42-3FB7-47AB-8BE1-C22A09D1F7E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62A52A42-3FB7-47AB-8BE1-C22A09D1F7E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62A52A42-3FB7-47AB-8BE1-C22A09D1F7E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62A52A42-3FB7-47AB-8BE1-C22A09D1F7E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0FCE6D7-4776-4570-9C3A-2A733403709E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0FCE6D7-4776-4570-9C3A-2A733403709E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0FCE6D7-4776-4570-9C3A-2A733403709E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0FCE6D7-4776-4570-9C3A-2A733403709E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E8C2A4A-4AB9-4F28-B006-0A9BBD76E30F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E8C2A4A-4AB9-4F28-B006-0A9BBD76E30F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E8C2A4A-4AB9-4F28-B006-0A9BBD76E30F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E8C2A4A-4AB9-4F28-B006-0A9BBD76E30F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
