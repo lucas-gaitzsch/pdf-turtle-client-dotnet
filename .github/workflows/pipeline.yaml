@@ -1,0 +1,15 @@
+name: build and deploy
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: dotnet build
+      - run: dotnet pack PdfTurtleClientDotnet/PdfTurtleClientDotnet.csproj --configuration Release  --no-build
+      # - run: dotnet nuget push PdfTurtleClientDotnet/bin/Release/PdfTurtleClientDotnet.*.nupkg --api-key
