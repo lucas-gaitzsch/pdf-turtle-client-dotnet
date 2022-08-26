@@ -11,6 +11,11 @@
     <PackageReference Include="NSwag.ApiDescription.Client" Version="13.0.5" />
   </ItemGroup>
 
+  
+  <ItemGroup>
+      <None Include="../README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
   <!-- Only used for model generation -->
   <!-- <ItemGroup>
     <OpenApiReference Include="swagger.json">
