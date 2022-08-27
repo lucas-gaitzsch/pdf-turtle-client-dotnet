@@ -6,6 +6,7 @@ on:
     branches: [ main ]
 env:
   DOTNET_VERSION: '6.0.x'
+  VERSION: $(date +'%Y.%m.%d.%H%M%S')
 
 jobs:
   build:
@@ -15,7 +16,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: ${DOTNET_VERSION}
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
@@ -30,7 +31,8 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: ${DOTNET_VERSION}
       - name: Pack and publish
-        run: dotnet pack PdfTurtleClientDotnet/PdfTurtleClientDotnet.csproj --configuration Release  --no-build
-      # - run: dotnet nuget push PdfTurtleClientDotnet/bin/Release/PdfTurtleClientDotnet.*.nupkg --api-key
+        run: dotnet pack PdfTurtleClientDotnet/PdfTurtleClientDotnet.csproj --configuration Release /property:Version=${VERSION}
+      - name: Upload to nuget
+        run: dotnet nuget push PdfTurtleClientDotnet/bin/Release/PdfTurtleClientDotnet.${VERSION}.nupkg --api-key
