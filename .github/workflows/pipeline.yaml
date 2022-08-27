@@ -37,6 +37,6 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Pack and publish
-        run: dotnet pack PdfTurtleClientDotnet/PdfTurtleClientDotnet.csproj --configuration Release /property:Version=${{ env.VERSION }}
+        run: dotnet pack PdfTurtleClientDotnet/PdfTurtleClientDotnet.csproj --configuration Release /property:Version=${{ env.VERSION }} -o PdfTurtleClientDotnet/bin
       - name: Upload to nuget
-        run: dotnet nuget push PdfTurtleClientDotnet/bin/Release/PdfTurtleClientDotnet.${{ env.VERSION }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json 
+        run: dotnet nuget push PdfTurtleClientDotnet/bin/PdfTurtleClientDotnet.${{ env.VERSION }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json 
