@@ -1,5 +1,5 @@
 # PdfTurtleClientDotnet
-.NET Standard 2.1 library to use the [pdf-turtle](https://github.com/lucas-gaitzsch/pdf-turtle) service 
+.NET Standard 2.0 library to use the [pdf-turtle](https://github.com/lucas-gaitzsch/pdf-turtle) service 
 ## WIP ...
 **HINT:** This lib is currently under development.
 
