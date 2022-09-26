@@ -22,14 +22,13 @@ public class PdfTurtleClient : IPdfTurtleClient {
     public PdfTurtleClient(HttpClient httpClient, ILogger<PdfTurtleClient> logger) {
         this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
     }
 
     public Task<Stream> RenderAsync(RenderData renderData, CancellationToken cancellationToken = default) 
-        => this.RenderGeneric("pdf/from/html/render", renderData, cancellationToken);
+        => this.RenderGeneric("/api/pdf/from/html/render", renderData, cancellationToken);
 
     public Task<Stream> RenderTemplateAsync(RenderTemplateData renderData, CancellationToken cancellationToken = default)
-        => this.RenderGeneric("/pdf/from/html-template/render", renderData, cancellationToken);
+        => this.RenderGeneric("/api/pdf/from/html-template/render", renderData, cancellationToken);
 
     public async Task<TemplateTestResultResponse> TestTemplateAsync(RenderTemplateData renderData, CancellationToken cancellationToken = default) {
         using var ms = new MemoryStream();
@@ -39,7 +38,7 @@ public class PdfTurtleClient : IPdfTurtleClient {
 
         using var content = new StreamContent(ms);
 
-        var response = await httpClient.PostAsync("/pdf/from/html-template/test", content, cancellationToken);
+        var response = await httpClient.PostAsync("/api/pdf/from/html-template/test", content, cancellationToken);
 
         if (response.IsSuccessStatusCode) {
             return JsonSerializer.Deserialize<TemplateTestResultResponse>(await response.Content.ReadAsStringAsync(), this.jsonSerializerOptions.Value) ?? new();
@@ -69,4 +68,40 @@ public class PdfTurtleClient : IPdfTurtleClient {
 
     private async Task<ErrorResponse?> DeserializeErrResponse(HttpResponseMessage response, CancellationToken cancellationToken)
         => JsonSerializer.Deserialize<ErrorResponse>(await response.Content.ReadAsStringAsync(), this.jsonSerializerOptions.Value);
+
+    public async Task<Stream> RenderBundleAsync(Stream bundleStream, object? model = null, CancellationToken cancellationToken = default) {
+        
+        using var formData = new MultipartFormDataContent();
+        
+        using var bundleData = new StreamContent(bundleStream);
+        formData.Add(bundleData, "bundle", "bundle.zip");
+
+
+        using var msModel = new MemoryStream();
+        StreamContent? modelData = null;
+        if (model != null) {
+            await JsonSerializer.SerializeAsync(msModel, model, this.jsonSerializerOptions.Value, cancellationToken);
+            msModel.Seek(0, SeekOrigin.Begin);
+
+            modelData = new StreamContent(msModel);
+
+            formData.Add(modelData, "model");
+        }
+
+        var response = await httpClient.PostAsync("/api/pdf/from/html-bundle/render", formData, cancellationToken);
+
+        modelData?.Dispose();
+
+        if (response.IsSuccessStatusCode) {
+            return await response.Content.ReadAsStreamAsync();
+        } else {
+            var err = await this.DeserializeErrResponse(response, cancellationToken);
+            throw new ErrorResponseException(err);
+        }
+    }
+
+    public async Task<Stream> RenderBundleAsync(byte[] bundleByteArray, object? model = null, CancellationToken cancellationToken = default) {
+        using var ms = new MemoryStream(bundleByteArray);
+        return await RenderBundleAsync(ms, model, cancellationToken);
+    }
 }
