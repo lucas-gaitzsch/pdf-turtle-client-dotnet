@@ -13,7 +13,7 @@ dotnet add package PdfTurtleClientDotnet
 ```csharp
 ...
 // register service
-services.AddPdfTurtle();
+services.AddPdfTurtle("https://pdfturtle.gaitzsch.dev");
 ...
 ```
 
