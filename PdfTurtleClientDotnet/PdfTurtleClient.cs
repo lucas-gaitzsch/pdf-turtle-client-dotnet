@@ -69,13 +69,17 @@ public class PdfTurtleClient : IPdfTurtleClient {
     private async Task<ErrorResponse?> DeserializeErrResponse(HttpResponseMessage response, CancellationToken cancellationToken)
         => JsonSerializer.Deserialize<ErrorResponse>(await response.Content.ReadAsStringAsync(), this.jsonSerializerOptions.Value);
 
-    public async Task<Stream> RenderBundleAsync(Stream bundleStream, object? model = null, CancellationToken cancellationToken = default) {
+    public async Task<Stream> RenderBundleAsync(IReadOnlyCollection<Stream> bundleStreams, object? model = null, CancellationToken cancellationToken = default) {
         
         using var formData = new MultipartFormDataContent();
         
-        using var bundleData = new StreamContent(bundleStream);
-        formData.Add(bundleData, "bundle", "bundle.zip");
-
+        var bundles = bundleStreams.Select(_ => new StreamContent(_)).ToList();
+        
+        var i = 0;
+        foreach (var b in bundles)
+        {
+            formData.Add(b, "bundle", $"bundle-{i}.zip");            
+        }
 
         using var msModel = new MemoryStream();
         StreamContent? modelData = null;
@@ -90,6 +94,8 @@ public class PdfTurtleClient : IPdfTurtleClient {
 
         var response = await httpClient.PostAsync("/api/pdf/from/html-bundle/render", formData, cancellationToken);
 
+        // cleanup
+        bundles.ForEach(b => b.Dispose());
         modelData?.Dispose();
 
         if (response.IsSuccessStatusCode) {
@@ -100,8 +106,21 @@ public class PdfTurtleClient : IPdfTurtleClient {
         }
     }
 
-    public async Task<Stream> RenderBundleAsync(byte[] bundleByteArray, object? model = null, CancellationToken cancellationToken = default) {
-        using var ms = new MemoryStream(bundleByteArray);
-        return await RenderBundleAsync(ms, model, cancellationToken);
+    public Task<Stream> RenderBundleAsync(Stream bundleStream, object? model = null, CancellationToken cancellationToken = default)
+        => RenderBundleAsync(new [] { bundleStream }, model, cancellationToken);
+
+    public async Task<Stream> RenderBundleAsync(IReadOnlyCollection<byte[]> bundleByteArray, object? model = null, CancellationToken cancellationToken = default) {
+        new List<Stream>();
+        
+        var streams = bundleByteArray.Select(_ => new MemoryStream(_)).ToList();
+
+        var result = await RenderBundleAsync(streams, model, cancellationToken);
+
+        streams.ForEach(s => s.Dispose());
+        
+        return result;
     }
+
+    public Task<Stream> RenderBundleAsync(byte[] bundleByteArray, object? model = null, CancellationToken cancellationToken = default)
+        => RenderBundleAsync(new [] { bundleByteArray }, model, cancellationToken);
 }

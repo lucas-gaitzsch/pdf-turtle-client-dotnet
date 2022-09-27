@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
 using PdfTurtleClientDotnet;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Register PdfTurtle Client for Dependency Injection
-builder.Services.AddPdfTurtle();
+builder.Services.AddPdfTurtle("https://pdfturtle.gaitzsch.dev");
 
 var app = builder.Build();
 

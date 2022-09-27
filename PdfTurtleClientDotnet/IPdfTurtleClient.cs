@@ -10,5 +10,10 @@ public interface IPdfTurtleClient {
     Task<TemplateTestResultResponse> TestTemplateAsync(RenderTemplateData renderData, CancellationToken cancellationToken = default);
     
     Task<Stream> RenderBundleAsync(Stream bundleStream, object? model = null, CancellationToken cancellationToken = default);
+    
+    Task<Stream> RenderBundleAsync(IReadOnlyCollection<Stream> bundleStreams, object? model = null, CancellationToken cancellationToken = default);
+
     Task<Stream> RenderBundleAsync(byte[] bundleByteArray, object? model = null, CancellationToken cancellationToken = default);
+    
+    Task<Stream> RenderBundleAsync(IReadOnlyCollection<byte[]> bundleByteArrays, object? model = null, CancellationToken cancellationToken = default);
 }
