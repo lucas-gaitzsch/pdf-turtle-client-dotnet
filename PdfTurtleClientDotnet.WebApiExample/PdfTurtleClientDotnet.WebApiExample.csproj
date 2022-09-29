@@ -15,4 +15,9 @@
   <ItemGroup>
     <ProjectReference Include="../PdfTurtleClientDotnet/PdfTurtleClientDotnet.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="pdf-turtle-bundle-body.zip" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="pdf-turtle-bundle-header.zip" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

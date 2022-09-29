@@ -4,9 +4,12 @@
 **HINT:** This lib is in the beta.
 
 ## How to use - Recommended way for ASP.NET Core and Bundles
-Get the package from [nuget](https://www.nuget.org/packages/PdfTurtleClientDotnet).
+
+See a working example in [PdfTurtleClientDotnet.WebApiExample/Program.cs](./PdfTurtleClientDotnet.WebApiExample/Program.cs).
 
 ### 1. Prepare project
+
+Get the package from [nuget](https://www.nuget.org/packages/PdfTurtleClientDotnet).
 
 ```bash
 dotnet add package PdfTurtleClientDotnet
@@ -21,7 +24,6 @@ services.AddPdfTurtle("https://pdfturtle.gaitzsch.dev");
 // resolve service over dependency injection
 app.MapGet("/", (IPdfTurtleClient pdfTurtleClient) => { ... });
 ```
-For more information: see an example in [Program.cs](./PdfTurtleClientDotnet.WebApiExample/Program.cs)
 
 ### 2. Design your PDF in the playground
 Go to [🐢PdfTurtle-Playground](https://pdfturtle.gaitzsch.dev/), put an example model as JSON and design your PDF.
@@ -36,7 +38,7 @@ var pdfStream = await pdfTurtleClient.RenderBundleAsync(BUNDLE_AS_STREAM_OR_BYTE
 
 **Done.**
 
-### Tipp: Split your bundle
+### Hint: You can split your bundle
 If you want to have the same header for all documents, you can create a ZIP file with with only the `header.html` file.
 Now you can call the Service with multiple bundle files. The service will assemble the files together.
 
@@ -69,5 +71,5 @@ var pdfStream = await pdfTurtleClient.RenderTemplateAsync(new RenderTemplateData
 
 
 ## Open TODOs
-- [ ] Working examples for all Methods
+- [x] Working examples for all Methods
 - [ ] Tests
