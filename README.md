@@ -1,9 +1,9 @@
-# PdfTurtleClientDotnet
+# PdfTurtle Client .NET
 .NET Standard 2.0 library to use the [PdfTurtle](https://github.com/lucas-gaitzsch/pdf-turtle) service 
 
 **HINT:** This lib is in the beta.
 
-## How to use - Recommended way for ASP.NET Core and Bundles
+## How to use - Recommended way for ASP.NET Core and bundles
 
 See a working example in [PdfTurtleClientDotnet.WebApiExample/Program.cs](./PdfTurtleClientDotnet.WebApiExample/Program.cs).
 
