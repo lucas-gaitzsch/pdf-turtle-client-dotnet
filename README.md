@@ -1,5 +1,5 @@
 # PdfTurtleClientDotnet
-.NET Standard 2.0 library to use the [pdf-turtle](https://github.com/lucas-gaitzsch/pdf-turtle) service 
+.NET Standard 2.0 library to use the [PdfTurtle](https://github.com/lucas-gaitzsch/pdf-turtle) service 
 
 **HINT:** This lib is in the beta.
 
@@ -30,7 +30,7 @@ Go to [🐢PdfTurtle-Playground](https://pdfturtle.gaitzsch.dev/), put an exampl
 Download the bundle as ZIP file and put it in your resources/assets.
 
 ### 3. Call the service with the client and your data
-Call `RenderBundleAsync` to render the pdf to a Stream.
+Call `RenderBundleAsync` to render the pdf to a `Stream`.
 
 ```csharp
 var pdfStream = await pdfTurtleClient.RenderBundleAsync(BUNDLE_AS_STREAM_OR_BYTES, MODEL_AS_OBJECT);
@@ -44,7 +44,7 @@ Now you can call the Service with multiple bundle files. The service will assemb
 
 ```csharp
 var pdfStream = await pdfTurtleClient.RenderBundleAsync(
-        new [] { BUNDLE_WITHOUT_HEADER_AS_STREAM_OR_BYTES, HEADER_BUNDLE_AS_STREAM_OR_BYTES }
+        new [] { BUNDLE_WITHOUT_HEADER_AS_STREAM_OR_BYTES, HEADER_BUNDLE_AS_STREAM_OR_BYTES },
         MODEL_AS_OBJECT
     );
 ```
@@ -52,7 +52,7 @@ var pdfStream = await pdfTurtleClient.RenderBundleAsync(
 
 ## How to use - Alternative ways
 ### Without template (plain HTML)
-If the described way does not match your expectations, you can use a template engine of your tool (for example [RazorLight](https://www.nuget.org/packages/RazorLight)) and render HTML directly with PdfTurtle.
+If the described way does not match your expectations, you can use a template engine of your choice (for example [RazorLight](https://www.nuget.org/packages/RazorLight)) and render HTML directly with PdfTurtle.
 
 ```csharp
 var pdfStream = await pdfTurtleClient.RenderAsync(new RenderData() {
