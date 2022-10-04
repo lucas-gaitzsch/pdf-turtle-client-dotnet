@@ -15,6 +15,7 @@ public class RenderTemplateData {
 
     public string HtmlTemplate { get; set; } = string.Empty;
 
+    /// <summary>// Model with your data matching to the templates</summary>
     public object? Model { get; set; } = null;
 
     public RenderOptions Options { get; set; } = new();

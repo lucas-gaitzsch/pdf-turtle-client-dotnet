@@ -72,5 +72,5 @@ var pdfStream = await pdfTurtleClient.RenderTemplateAsync(new RenderTemplateData
 
 ## Open TODOs
 - [x] Working examples for all methods
-- [ ] Add documentation as comments
+- [x] Add documentation as comments
 - [ ] Tests

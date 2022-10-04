@@ -106,9 +106,6 @@ public class PdfTurtleClient : IPdfTurtleClient {
         }
     }
 
-    public Task<Stream> RenderBundleAsync(Stream bundleStream, object? model = null, CancellationToken cancellationToken = default)
-        => RenderBundleAsync(new [] { bundleStream }, model, cancellationToken);
-
     public async Task<Stream> RenderBundleAsync(IReadOnlyCollection<byte[]> bundleByteArray, object? model = null, CancellationToken cancellationToken = default) {
         new List<Stream>();
         
@@ -120,7 +117,4 @@ public class PdfTurtleClient : IPdfTurtleClient {
         
         return result;
     }
-
-    public Task<Stream> RenderBundleAsync(byte[] bundleByteArray, object? model = null, CancellationToken cancellationToken = default)
-        => RenderBundleAsync(new [] { bundleByteArray }, model, cancellationToken);
 }
