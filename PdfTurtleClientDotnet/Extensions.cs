@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace PdfTurtleClientDotnet;
@@ -11,6 +12,14 @@ public static class Extensions {
         });
 
         return serviceCollection;
+    }
+
+    public static IServiceCollection AddPdfTurtle(this IServiceCollection serviceCollection, IConfiguration configuration) {
+        
+        var config = new Config();
+        configuration.Bind("PdfTurtle", config);
+
+        return serviceCollection.AddPdfTurtle(new Uri(config.BaseUrl));
     }
 
     public static IServiceCollection AddPdfTurtle(this IServiceCollection serviceCollection, string pdfTurtleBaseUrl = "http://localhost:8000")
