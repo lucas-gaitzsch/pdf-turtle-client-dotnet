@@ -8,20 +8,32 @@ namespace PdfTurtleClientDotnet;
 public class PdfTurtleClient : IPdfTurtleClient {
     private readonly HttpClient httpClient;
     private readonly ILogger logger;
-    private readonly Lazy<JsonSerializerOptions> jsonSerializerOptions = new(() => {
-        var jsonSerializerOptions = new JsonSerializerOptions {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
-        };
 
-        jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    private readonly JsonSerializerOptions? externJsonSerializerOptions;
 
-        return jsonSerializerOptions;
-    });
+    private Lazy<JsonSerializerOptions> jsonSerializerOptions;
 
-    public PdfTurtleClient(HttpClient httpClient, ILogger<PdfTurtleClient> logger) {
+    public PdfTurtleClient(HttpClient httpClient, ILogger<PdfTurtleClient> logger, JsonSerializerOptions? jsonSerializerOptions = null) {
         this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+        this.externJsonSerializerOptions = jsonSerializerOptions;
+
+        this.jsonSerializerOptions = new(()=> {
+        
+            if (this.externJsonSerializerOptions != null) {
+                return externJsonSerializerOptions;
+            }
+
+            var ops = new JsonSerializerOptions {
+                PropertyNamingPolicy = null,
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+            };
+
+            ops.Converters.Add(new JsonStringEnumConverter());
+
+            return ops;
+    });
     }
 
     public Task<Stream> RenderAsync(RenderData renderData, CancellationToken cancellationToken = default) 
