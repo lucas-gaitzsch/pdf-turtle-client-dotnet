@@ -30,8 +30,8 @@ public static class Extensions {
 
             client.BaseAddress = new (new Uri(config.Value.Endpoint), "/api/");
             
-            if (config.Value.Token != null) {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", config.Value.Token);
+            if (config.Value.Secret != null) {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", config.Value.Secret);
             }
         });
 
