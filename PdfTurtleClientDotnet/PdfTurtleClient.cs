@@ -13,13 +13,24 @@ public class PdfTurtleClient : IPdfTurtleClient {
 
     private Lazy<JsonSerializerOptions> jsonSerializerOptions;
 
+    private Lazy<JsonSerializerOptions> jsonSerializerOptionsErrorMsg = new(() => {
+        var ops = new JsonSerializerOptions {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        };
+
+        ops.Converters.Add(new JsonStringEnumConverter());
+
+        return ops;
+    });
+
     public PdfTurtleClient(HttpClient httpClient, ILogger<PdfTurtleClient> logger, JsonSerializerOptions? jsonSerializerOptions = null) {
         this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
         this.externJsonSerializerOptions = jsonSerializerOptions;
 
-        this.jsonSerializerOptions = new(()=> {
+        this.jsonSerializerOptions = new(() => {
         
             if (this.externJsonSerializerOptions != null) {
                 return externJsonSerializerOptions;
@@ -27,13 +38,13 @@ public class PdfTurtleClient : IPdfTurtleClient {
 
             var ops = new JsonSerializerOptions {
                 PropertyNamingPolicy = null,
-                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             };
 
             ops.Converters.Add(new JsonStringEnumConverter());
 
             return ops;
-    });
+        });
     }
 
     public Task<Stream> RenderAsync(RenderData renderData, CancellationToken cancellationToken = default) 
@@ -79,7 +90,7 @@ public class PdfTurtleClient : IPdfTurtleClient {
     }
 
     private async Task<ErrorResponse?> DeserializeErrResponse(HttpResponseMessage response, CancellationToken cancellationToken)
-        => JsonSerializer.Deserialize<ErrorResponse>(await response.Content.ReadAsStringAsync(), this.jsonSerializerOptions.Value);
+        => JsonSerializer.Deserialize<ErrorResponse>(await response.Content.ReadAsStringAsync(), this.jsonSerializerOptionsErrorMsg.Value);
 
     public async Task<Stream> RenderBundleAsync(IReadOnlyCollection<Stream> bundleStreams, object? model = null, CancellationToken cancellationToken = default) {
         

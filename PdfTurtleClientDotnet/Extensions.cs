@@ -10,7 +10,7 @@ public static class Extensions {
     public static IServiceCollection AddPdfTurtle(this IServiceCollection serviceCollection, Uri pdfTurtleBaseUrl, string? token = null) {
         
         serviceCollection.AddHttpClient<IPdfTurtleClient, PdfTurtleClient>(client => {
-            client.BaseAddress = new (pdfTurtleBaseUrl, "/api/");
+            client.BaseAddress = pdfTurtleBaseUrl;
             
             if (token != null) {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -28,7 +28,7 @@ public static class Extensions {
         serviceCollection.AddHttpClient<IPdfTurtleClient, PdfTurtleClient>((sp, client) => {
             var config = sp.GetRequiredService<IOptions<PdfTurtleConfig>>();
 
-            client.BaseAddress = new (new Uri(config.Value.Endpoint), "/api/");
+            client.BaseAddress = new Uri(config.Value.Endpoint);
             
             if (config.Value.Secret != null) {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", config.Value.Secret);
