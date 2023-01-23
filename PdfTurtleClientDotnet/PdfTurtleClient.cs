@@ -41,8 +41,6 @@ public class PdfTurtleClient : IPdfTurtleClient {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             };
 
-            ops.Converters.Add(new JsonStringEnumConverter());
-
             return ops;
         });
     }
