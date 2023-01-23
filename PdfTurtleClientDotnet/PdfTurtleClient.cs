@@ -13,7 +13,7 @@ public class PdfTurtleClient : IPdfTurtleClient {
 
     private Lazy<JsonSerializerOptions> jsonSerializerOptions;
 
-    private Lazy<JsonSerializerOptions> jsonSerializerOptionsErrorMsg = new(() => {
+    private Lazy<JsonSerializerOptions> jsonSerializerOptionsPdfTurtleResponse = new(() => {
         var ops = new JsonSerializerOptions {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -62,7 +62,7 @@ public class PdfTurtleClient : IPdfTurtleClient {
         var response = await httpClient.PostAsync("/api/pdf/from/html-template/test", content, cancellationToken);
 
         if (response.IsSuccessStatusCode) {
-            return JsonSerializer.Deserialize<TemplateTestResultResponse>(await response.Content.ReadAsStringAsync(), this.jsonSerializerOptions.Value) ?? new();
+            return JsonSerializer.Deserialize<TemplateTestResultResponse>(await response.Content.ReadAsStringAsync(), this.jsonSerializerOptionsPdfTurtleResponse.Value) ?? new();
         } else {
             var err = await this.DeserializeErrResponse(response, cancellationToken);
             throw new ErrorResponseException(err);
@@ -88,7 +88,7 @@ public class PdfTurtleClient : IPdfTurtleClient {
     }
 
     private async Task<ErrorResponse?> DeserializeErrResponse(HttpResponseMessage response, CancellationToken cancellationToken)
-        => JsonSerializer.Deserialize<ErrorResponse>(await response.Content.ReadAsStringAsync(), this.jsonSerializerOptionsErrorMsg.Value);
+        => JsonSerializer.Deserialize<ErrorResponse>(await response.Content.ReadAsStringAsync(), this.jsonSerializerOptionsPdfTurtleResponse.Value);
 
     public async Task<Stream> RenderBundleAsync(IReadOnlyCollection<Stream> bundleStreams, object? model = null, CancellationToken cancellationToken = default) {
         
