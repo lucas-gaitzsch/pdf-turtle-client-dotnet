@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace PdfTurtleClientDotnet.Models;
 
 public class RenderTemplateData {
@@ -20,6 +22,7 @@ public class RenderTemplateData {
 
     public RenderOptions Options { get; set; } = new();
 
+    [JsonConverter(typeof(JsonStringEnumConverter))] 
     public RenderTemplateDataTemplateEngine? TemplateEngine { get; set; } = RenderTemplateDataTemplateEngine.Golang;
 
 }
