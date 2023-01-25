@@ -90,16 +90,18 @@ public class PdfTurtleClient : IPdfTurtleClient {
     private async Task<ErrorResponse?> DeserializeErrResponse(HttpResponseMessage response, CancellationToken cancellationToken)
         => JsonSerializer.Deserialize<ErrorResponse>(await response.Content.ReadAsStringAsync(), this.jsonSerializerOptionsPdfTurtleResponse.Value);
 
-    public async Task<Stream> RenderBundleAsync(IReadOnlyCollection<Stream> bundleStreams, object? model = null, CancellationToken cancellationToken = default) {
+    public async Task<Stream> RenderBundleAsync(IReadOnlyCollection<IBundleFormData> bundleData, object? model = null, CancellationToken cancellationToken = default) {
         
         using var formData = new MultipartFormDataContent();
         
-        var bundles = bundleStreams.Select(_ => new StreamContent(_)).ToList();
+        var bundleStreamContentsToDispose = new List<StreamContent>(bundleData.Count);
         
-        var i = 0;
-        foreach (var b in bundles)
+        foreach (var b in bundleData)
         {
-            formData.Add(b, "bundle", $"bundle-{i}.zip");            
+            var sc = new StreamContent(b.Stream);
+            bundleStreamContentsToDispose.Add(sc);
+
+            formData.Add(sc, "bundle", b.FileName);
         }
 
         using var msModel = new MemoryStream();
@@ -116,7 +118,8 @@ public class PdfTurtleClient : IPdfTurtleClient {
         var response = await httpClient.PostAsync("/api/pdf/from/html-bundle/render", formData, cancellationToken);
 
         // cleanup
-        bundles.ForEach(b => b.Dispose());
+        bundleStreamContentsToDispose.ForEach(b => b.Dispose());
+        bundleData.ToList().ForEach(s => s.Dispose());
         modelData?.Dispose();
 
         if (response.IsSuccessStatusCode) {
@@ -127,15 +130,18 @@ public class PdfTurtleClient : IPdfTurtleClient {
         }
     }
 
-    public async Task<Stream> RenderBundleAsync(IReadOnlyCollection<byte[]> bundleByteArray, object? model = null, CancellationToken cancellationToken = default) {
-        new List<Stream>();
-        
-        var streams = bundleByteArray.Select(_ => new MemoryStream(_)).ToList();
 
-        var result = await RenderBundleAsync(streams, model, cancellationToken);
-
-        streams.ForEach(s => s.Dispose());
+    public Task<Stream> RenderBundleAsync(IReadOnlyCollection<Stream> zipBundleStreams, object? model = null, CancellationToken cancellationToken = default) {
+        var bundleFormData = zipBundleStreams.Select(stream => new BundleFormDataStream(fileName: GetBundleZipFileName(), stream)).ToList();
         
-        return result;
+        return RenderBundleAsync(bundleFormData, model);
     }
+
+    public Task<Stream> RenderBundleAsync(IReadOnlyCollection<byte[]> zipBundleByteArray, object? model = null, CancellationToken cancellationToken = default) {
+        var bundleFormData = zipBundleByteArray.Select(byteArray => new BundleFormDataByteArray(fileName: GetBundleZipFileName(), byteArray)).ToList();
+        
+        return RenderBundleAsync(bundleFormData, model);
+    }
+
+    private string GetBundleZipFileName() => $"bundle-{Guid.NewGuid()}.zip";
 }
