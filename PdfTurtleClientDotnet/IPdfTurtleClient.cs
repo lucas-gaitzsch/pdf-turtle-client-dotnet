@@ -44,4 +44,13 @@ public interface IPdfTurtleClient {
     /// <param name="cancellationToken">CancellationToken</param>
     /// <returns></returns>
     Task<Stream> RenderBundleAsync(IReadOnlyCollection<byte[]> bundleByteArrays, object? model = null, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns PDF file generated from bundle (Zip-File) of HTML or HTML template of body, header, footer and assets. The index.html file in the Zip-Bundle is required
+    /// </summary>
+    /// <param name="bundleData">Input of bundles or files with filenames</param>
+    /// <param name="model">Model with your data matching to the templates</param>
+    /// <param name="cancellationToken">CancellationToken</param>
+    /// <returns></returns>
+    Task<Stream> RenderBundleAsync(IReadOnlyCollection<IBundleFormData> bundleData, object? model = null, CancellationToken cancellationToken = default);
 }

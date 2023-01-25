@@ -11,9 +11,10 @@ var app = builder.Build();
 app.MapGet("/", 
     () => Results.Content(@"
         <!DOCTYPE html>
-        <a href='/html-bundle-example'>   HTML bundle example   </a><br>
-        <a href='/html-example'>          HTML example          </a><br>
-        <a href='/html-template-example'> HTML template example </a><br>
+        <a href='/html-bundle-example'>             HTML bundle example             </a><br>
+        <a href='/html-bundle-with-file-example'>   HTML bundle with file example   </a><br>
+        <a href='/html-example'>                    HTML example                    </a><br>
+        <a href='/html-template-example'>           HTML template example           </a><br>
         ", "text/html")
 )
 .WithName("Index");
@@ -44,6 +45,35 @@ app.MapGet("/html-bundle-example", async (IPdfTurtleClient pdfTurtleClient, Canc
     return Results.File(pdfStream, "application/pdf");
 })
 .WithName("Render PDF - Bundle example (with header)");
+
+app.MapGet("/html-bundle-with-file-example", async (IPdfTurtleClient pdfTurtleClient, CancellationToken cancellationToken) =>
+{
+    var bodyBundle = await File.ReadAllBytesAsync("pdf-turtle-bundle-body.zip");
+    var headerFile = await File.ReadAllBytesAsync("pdf-turtle-bundle-header/header.html");
+
+    var model = new {
+        title = "PdfTurtle _🐢_ TestReport",
+        heading = "Sales Overview",
+        summery = new {
+            totalSales = 32993,
+            salesPerWeek = 82,
+            performanceIndex = 5.132,
+            salesVolume = 848932,
+        }
+    };
+
+    var pdfStream = await pdfTurtleClient.RenderBundleAsync(
+        new [] { 
+            new BundleFormDataByteArray("bundle-body.zip", bodyBundle), 
+            new BundleFormDataByteArray("header.html", headerFile),
+        },
+        model,
+        cancellationToken
+    );
+
+    return Results.File(pdfStream, "application/pdf");
+})
+.WithName("Render PDF - Bundle with file example (with header)");
 
 
 app.MapGet("/html-example", async (IPdfTurtleClient pdfTurtleClient, CancellationToken cancellationToken) =>
