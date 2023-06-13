@@ -58,6 +58,7 @@ public class PdfTurtleClient : IPdfTurtleClient {
         ms.Seek(0, SeekOrigin.Begin);
 
         using var content = new StreamContent(ms);
+        content.Headers.Add("Content-Type", "application/json");
 
         var response = await httpClient.PostAsync("/api/pdf/from/html-template/test", content, cancellationToken);
 
@@ -76,6 +77,7 @@ public class PdfTurtleClient : IPdfTurtleClient {
         ms.Seek(0, SeekOrigin.Begin);
 
         using var content = new StreamContent(ms);
+        content.Headers.Add("Content-Type", "application/json");
 
         var response = await httpClient.PostAsync(requestPath, content, cancellationToken);
 
@@ -111,6 +113,7 @@ public class PdfTurtleClient : IPdfTurtleClient {
             msModel.Seek(0, SeekOrigin.Begin);
 
             modelData = new StreamContent(msModel);
+            modelData.Headers.Add("Content-Type", "application/json");
 
             formData.Add(modelData, "model");
         }
