@@ -41,7 +41,7 @@ var pdfStream = await pdfTurtleClient.RenderBundleAsync(BUNDLE_AS_STREAM_OR_BYTE
 **Done.**
 
 ### Hint: You can split your bundle
-If you want to have the same header for all documents, you can create a ZIP file with with only the `header.html` file.
+If you want to have the same header for all documents, you can create a ZIP file with only the `header.html` file.
 Now you can call the Service with multiple bundle files. The service will assemble the files together.
 
 ```csharp
