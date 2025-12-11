@@ -12,7 +12,7 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
@@ -32,7 +32,7 @@ jobs:
       - name: Set version to env
         run: |
           echo "VERSION=$(date +'%Y.%-m.%-d.%-H%M')" >> $GITHUB_ENV
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
